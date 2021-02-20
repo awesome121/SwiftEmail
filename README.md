@@ -7,5 +7,5 @@ Used for practicing Python Tkinter with my friend Patrick Keefee :)
 
 # Prerequisites
 
-* Install Python 3.7 https://www.python.org
+* Please install Python 3.7 or above https://www.python.org/downloads/
 
