@@ -8,7 +8,7 @@
 """
 from tkinter import *
 from tkinter.ttk import *
-from fileHandler import *
+import fileHandler 
 from smtplib import SMTP
 from email.mime.text import MIMEText
 import smtplib
@@ -54,13 +54,13 @@ class EmailGui:
         
         
         #Combobox:
-        self.account_combo = Combobox(window, values=list(get_account_dictionary().keys()))
+        self.account_combo = Combobox(window, values=list(fileHandler.get_account_dictionary().keys()))
         self.account_combo.grid(row=1, column=1, sticky=(E, W), columnspan=2)
         
-        self.address_combo = Combobox(window, values=list(get_receiver_dictionary().keys()))
+        self.address_combo = Combobox(window, values=list(fileHandler.get_receiver_dictionary().keys()))
         self.address_combo.grid(row=4, column=1, sticky=(E, W))
         
-        self.template_combo = Combobox(window, values=list(get_mail_templates(self.account_combo.get()).keys()))
+        self.template_combo = Combobox(window, values=list(fileHandler.get_mail_templates(self.account_combo.get()).keys()))
         self.template_combo.grid(row=7, column=0)
         self.template_combo.bind('<<ComboboxSelected>>', self.on_selected_combo)
         
@@ -87,7 +87,7 @@ class EmailGui:
             
         else:
             try:
-                self.account = get_account_dictionary()[self.account_combo.get()]
+                self.account = fileHandler.get_account_dictionary()[self.account_combo.get()]
             except KeyError:
                 self.account = self.account_combo.get()
             try:
@@ -122,18 +122,23 @@ class EmailGui:
         
     def on_click_save_template(self):
         template_name, template_content = process_text_for_template(self.content.get('1.0', 'end'))
-        save_template(self.account_combo.get(), template_name, template_content, True)
+        is_overridden = fileHandler.save_template(self.account_combo.get(), template_name, template_content, True)
+        if is_overriden:
+            self.prompt_label['text'] = 'Templated overriden'
+        else:
+            self.prompt_label['text'] = 'Templated Saved'
         self.new_template.configure(text='New template', command=self.on_click_new_template)
-        self.prompt_label['text'] = 'Templated Saved'
+        
         
     def on_click_delete_template(self):
-        delete_template(self.account_combo.get(), self.selected_combo_item)
-        self.prompt_label['text'] = 'Template Deleted'
+        was_found = fileHandler.delete_template(self.account_combo.get(), self.selected_combo_item)
+        if was_found:
+            self.prompt_label['text'] = 'Template Deleted'
         #self.template_delete
         
     def on_selected_combo(self, event):
         self.selected_combo_item = event.widget.get()
-        template_content = get_mail_templates(self.account_combo.get())[self.selected_combo_item]
+        template_content = fileHandler.get_mail_templates(self.account_combo.get())[self.selected_combo_item]
         self.content.delete(1.0, 'end')
         self.content.insert(1.0, template_content)
         
@@ -143,7 +148,7 @@ class EmailGui:
         """Send message"""
         time = asctime().split()[3]
         try:
-            address = get_receiver_dictionary[self.address_combo.get()]
+            address = fileHandler.get_receiver_dictionary[self.address_combo.get()]
         except KeyError:
             address = self.address_combo.get()  
         try:
