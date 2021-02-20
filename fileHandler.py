@@ -19,7 +19,6 @@ def get_email_entity_information(csv_directory):
     entities = {}
     file = open(csv_directory,"r")
     for line in file.readlines():
-        print(line)
         entry = delete_substrings_in_array(line,["\n","\t","\\"])
         entry = entry.split(",")
         if len(entry) > 1:
@@ -36,15 +35,14 @@ def get_mail_templates(account_name):
     """e.g. account name is "Jimmy's gmail"
        It should return a dictionary {"name of the template": "Content"}
     """
-    if account_name == "":return(account_name)
+    if account_name == "":return {}
     account_dir = "Templates/"+account_name
     if not os.path.exists(account_dir):
         os.mkdir(account_dir)
-        return("")
+        return {}
     templates = {}
     directory_names = os.listdir(account_dir)
     for directory in directory_names:
-        print(account_dir+"/"+directory)
         file = open(account_dir+"/"+directory,"r")
         templates[directory.split(".")[0]] = file.read()
         file.close()
