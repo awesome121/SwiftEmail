@@ -16,7 +16,7 @@ Used for practicing Python Tkinter with my friend Patrick Keefee :)
 </br></br></br></br>
 
 ![input email template]()
-<img src="/preview.png" alt="drawing" width="200" height="200"/>
+<img src="/preview.png" width="700" height="700"/>
 
 ![Preview](/preview2.png)
-<img src="/preview2.png" alt="drawing" width="200" height="200"/>
+<img src="/preview2.png" width="700" height="700"/>
