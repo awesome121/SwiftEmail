@@ -40,7 +40,7 @@ class EmailGui:
         self.content_label.grid(row=6, column=0)
         
         #Buttons:
-        self.account_enter = Button(window, text='Log In', command=self.connection)
+        self.account_enter = Button(window, text='Log In', command=self.on_click_login)
         self.account_enter.grid(row=3, column=1, columnspan=3, sticky=(E, W))
         
         self.template_delete = Button(window, text='Delete', command=self.on_click_delete_template)
@@ -49,7 +49,7 @@ class EmailGui:
         self.new_template = Button(window, text='New template', command=self.on_click_new_template)
         self.new_template.grid(row=6, column=2)
            
-        self.content_submit = Button(window, text='Send', command=self.send)
+        self.content_submit = Button(window, text='Send', command=self.on_click_send)
         self.content_submit.grid(row=8, column=2)
         
         
@@ -62,7 +62,7 @@ class EmailGui:
         
         self.template_combo = Combobox(window, values=list(fileHandler.get_mail_templates(self.account_combo.get()).keys()))
         self.template_combo.grid(row=7, column=0)
-        self.template_combo.bind('<<ComboboxSelected>>', self.on_selected_combo)
+        self.template_combo.bind('<<ComboboxSelected>>', self.on_selected_template_combo)
         
         #Entry:
 
@@ -80,8 +80,11 @@ class EmailGui:
         #self.content.insert('10.0', 'Thank you\nJimmy')
         
 
-    def connection(self):
+
+    #======Component on listeners===========
+    def on_click_login(self):
         """A connection to email server"""
+        self.update_template_combobox() #change templates to this new account
         if self.account_combo.get() == '' or self.password_entry.get() == '':
             self.prompt_label['text'] = 'Incorrect account information' 
             
@@ -121,30 +124,43 @@ class EmailGui:
         self.content.insert(1.0, 'Template Name: ""\nTemplate Content: \n"\n\n\n"')
         
     def on_click_save_template(self):
+        time = asctime().split()[3]
         template_name, template_content = process_text_for_template(self.content.get('1.0', 'end'))
-        is_overridden = fileHandler.save_template(self.account_combo.get(), template_name, template_content, True)
-        if is_overriden:
-            self.prompt_label['text'] = 'Templated overriden'
+        if template_name in fileHandler.get_mail_templates(self.account_combo.get()): # If it exists
+            is_overriden = fileHandler.save_template(self.account_combo.get(), template_name, template_content)
         else:
-            self.prompt_label['text'] = 'Templated Saved'
+            is_overriden = fileHandler.save_template(self.account_combo.get(), template_name, template_content)
+        if is_overriden:
+            self.prompt_label['text'] = 'Template Overriden at ' + time
+        else:
+            self.prompt_label['text'] = 'Template Saved at ' + time
         self.new_template.configure(text='New template', command=self.on_click_new_template)
+        self.update_template_combobox()
+        self.content.delete(1.0, 'end')
         
         
     def on_click_delete_template(self):
-        was_found = fileHandler.delete_template(self.account_combo.get(), self.selected_combo_item)
-        if was_found:
-            self.prompt_label['text'] = 'Template Deleted'
-        #self.template_delete
+        time = asctime().split()[3]
+        if self.new_template['text'] == 'Save':
+            self.prompt_label['text'] = 'Please save the editing template first '
+        else:
+            was_found = fileHandler.delete_template(self.account_combo.get(), self.selected_combo_item)
+            if was_found:
+                self.prompt_label['text'] = 'Template Deleted at ' + time
+            self.update_template_combobox()
         
-    def on_selected_combo(self, event):
+    def on_selected_template_combo(self, event):
+        self.update_template_combobox()
         self.selected_combo_item = event.widget.get()
-        template_content = fileHandler.get_mail_templates(self.account_combo.get())[self.selected_combo_item]
-        self.content.delete(1.0, 'end')
-        self.content.insert(1.0, template_content)
+        if self.new_template['text'] == 'Save':
+            self.prompt_label['text'] = 'Please save the editing template first ' + time
+        else:
+            template_content = fileHandler.get_mail_templates(self.account_combo.get())[self.selected_combo_item]
+            self.content.delete(1.0, 'end')
+            self.content.insert(1.0, template_content)
+    
         
-        
-        
-    def send(self):
+    def on_click_send(self):
         """Send message"""
         time = asctime().split()[3]
         try:
@@ -161,19 +177,24 @@ class EmailGui:
         else:
             print(self.content.get(0.0, 25.0))
             self.prompt_label['text'] = 'Send to:  ' + address + '    Successfullly    ' + 'Time: ' + time
+            
+            
+    #======Component on click listeners above===========
+    
+    
+    
+    def update_template_combobox(self):
+        self.template_combo.configure(values=list(fileHandler.get_mail_templates(self.account_combo.get()).keys()))    
+    
 
 #================================================================================
+
+
+
 def process_text_for_template(text):
-    temp_name, temp_content = text[:17], ''
-    length = len(text)
-    i = 0
-    while i < length:
-        if i > 20:
-            if text[i-20:i] == 'Template Content: \n"':
-                temp_content += text[i:-1]
-                break
-        i += 1
-    return temp_name, temp_content
+    temp_name, temp_content = '', ''
+    ln = text.split('"')
+    return ln[1], '"'.join(ln[3:-1])
 
 
 def main():
