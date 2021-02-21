@@ -25,10 +25,10 @@ class EmailGui:
         self.prompt_label.grid(row=0, column=0, columnspan=3)      
         
         self.account_label = Label(window, text='Account: ')
-        self.account_label.grid(row=1, column=0)        
+        self.account_label.grid(row=1, column=0, sticky=E)        
         
         self.password_label = Label(window, text='Password: ')
-        self.password_label.grid(row=2, column=0)        
+        self.password_label.grid(row=2, column=0, sticky=E)        
         
         self.address_label = Label(window, text='To: ')
         self.address_label.grid(row=4, column=0, sticky=E)
@@ -37,20 +37,20 @@ class EmailGui:
         self.subject_label.grid(row=5, column=0, sticky=E)
         
         self.content_label = Label(window, text='Content: ')
-        self.content_label.grid(row=6, column=0)
+        self.content_label.grid(row=6, column=0, sticky=E)
         
         #Buttons:
         self.account_enter = Button(window, text='Log In', command=self.on_click_login)
-        self.account_enter.grid(row=3, column=1, columnspan=3, sticky=(E, W))
+        self.account_enter.grid(row=3, column=1, columnspan=2, sticky=(E, W))
         
         self.template_delete = Button(window, text='Delete', command=self.on_click_delete_template)
-        self.template_delete.grid(row=8, column=0)        
+        self.template_delete.grid(row=8, column=0, sticky=E)        
         
         self.new_template = Button(window, text='New template', command=self.on_click_new_template)
         self.new_template.grid(row=6, column=2)
            
         self.content_submit = Button(window, text='Send', command=self.on_click_send)
-        self.content_submit.grid(row=8, column=2)
+        self.content_submit.grid(row=8, column=2, sticky=E)
         
         
         #Combobox:
@@ -60,9 +60,10 @@ class EmailGui:
         self.address_combo = Combobox(window, values=list(fileHandler.get_receiver_dictionary().keys()))
         self.address_combo.grid(row=4, column=1, sticky=(E, W))
         
-        self.template_combo = Combobox(window, values=list(fileHandler.get_mail_templates(self.account_combo.get()).keys()))
-        self.template_combo.grid(row=7, column=0)
+        self.template_combo = Combobox(window, values=list(fileHandler.get_mail_templates(self.account_combo.get()).keys()), width=7)
+        self.template_combo.grid(sticky=W, row=7)
         self.template_combo.bind('<<ComboboxSelected>>', self.on_selected_template_combo)
+        
         
         #Entry:
 
