@@ -13,5 +13,8 @@ Used for practicing Python Tkinter with my friend Patrick Keefee :)
 * Public email templates are saved under Users/, user specific templates will be saved under its specific folder e.g. Users/Jimmy/
 * Two .csv files under Users/
 * Run swiftEmail.py to launch the program
+![input email template]
+(https://github.com/awesome121/SwiftEmail/blob/main/preview.png)
 
-
+![Preview]
+(https://github.com/awesome121/SwiftEmail/blob/main/preview2.png)
