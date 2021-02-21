@@ -164,20 +164,19 @@ class EmailGui:
     def on_click_send(self):
         """Send message"""
         time = asctime().split()[3]
-        try:
-            address = fileHandler.get_receiver_dictionary[self.address_combo.get()]
-        except KeyError:
-            address = self.address_combo.get()  
+        dest_address = fileHandler.get_receiver_dictionary()[self.address_combo.get()]
         try:
             mail = MIMEText(self.content.get(0.0, 10.0))
             mail['Subject'] = self.subject_entry.get()
-            print(mail.as_string())
-            self.server.sendmail(self.account, address, mail.as_string())
-        except:
+            print("Destination: " + dest_address)
+            self.server.sendmail(self.account, dest_address, mail.as_string())
+        except IndexError:
             self.prompt_label['text'] = 'Fail to send     ' + 'Time: ' + time
+            print("failure")
         else:
             print(self.content.get(0.0, 25.0))
-            self.prompt_label['text'] = 'Send to:  ' + address + '    Successfullly    ' + 'Time: ' + time
+            self.prompt_label['text'] = 'Send to:  ' + dest_address + '    Successfullly    ' + 'Time: ' + time
+        print("success")
             
             
     #======Component on click listeners above===========
