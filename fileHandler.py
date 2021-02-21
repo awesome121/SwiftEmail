@@ -60,13 +60,14 @@ def delete_template(account_name, template_name):
     return True
     
     
-def save_template(account_name, template_name, template_content, is_new):
-    """If is a new template, the name exists, return false
-       If is not a new template, override the template file, return true
+def save_template(account_name, template_name, template_content):
+    """Return True if is_overriden, false otherwise
     """
+    is_overriden = False
     directory = "Templates/"+account_name+"/"+template_name+".txt"
-    if is_new and os.path.exists("Templates/"+account_name+"/"+template_name+".txt"): return False
+    if os.path.exists("Templates/"+account_name+"/"+template_name+".txt"):      
+        is_overriden = True
     file = open(directory,"w")
     file.write(template_content)
-    file.close()
-    return True
+    file.close()    
+    return is_overriden
