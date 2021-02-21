@@ -15,6 +15,6 @@ Used for practicing Python Tkinter with my friend Patrick Keefee :)
 * Run swiftEmail.py to launch the program
 
 
-! [input email template] (/preview.png)
+![input email template](/preview.png)
 
-! [Preview] (/preview2.png)
+![Preview](/preview2.png)
