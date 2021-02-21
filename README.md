@@ -9,3 +9,9 @@ Used for practicing Python Tkinter with my friend Patrick Keefee :)
 
 * Please install Python 3.7 or above https://www.python.org/downloads/
 
+# Introduction
+* Public email templates are saved under Users/, user specific templates will be saved under its specific folder e.g. Users/Jimmy/
+* Two .csv files under Users/
+* Run swiftEmail.py to launch the program
+
+
