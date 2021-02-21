@@ -15,8 +15,7 @@ Used for practicing Python Tkinter with my friend Patrick Keefee :)
 * Run swiftEmail.py to launch the program
 </br></br></br></br>
 
-![input email template]()
-<img src="/preview.png" width="700" height="700"/>
 
-![Preview](/preview2.png)
-<img src="/preview2.png" width="700" height="700"/>
+<img src="/preview.png" width="500" height="500"/>
+
+<img src="/preview2.png" width="500" height="500"/>
